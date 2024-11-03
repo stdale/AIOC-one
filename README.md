@@ -1,25 +1,17 @@
-[![](https://dcbadge.vercel.app/api/server/wCbXu9R95C?style=flat&theme=default-inverted)](https://discord.gg/wCbXu9R95C)
-[![](https://img.shields.io/github/stars/skuep/AIOC)](https://github.com/skuep/AIOC/stargazers)
-[![](https://img.shields.io/github/v/release/skuep/AIOC?sort=semver)](https://github.com/skuep/AIOC/releases)
-[![](https://img.shields.io/github/license/skuep/AIOC)](https://github.com/skuep/AIOC/blob/master/LICENSE.md)
+# AIOC minus cable
+This is the Ham Radio *All-in-one-Cable* without the cable!. **Its a fork of a project currently still being tested! So infer what you want as to how much this has been tested** Please read this README as it'll be the main place to see the differences between the amazing [AIOC](https://github.com/skuep/AIOC) which you should still go support and purchase.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F2F415AKJV)
-
-# AIOC
-This is the Ham Radio *All-in-one-Cable*. **It is currently still being tested!** Please read this README carefully before ordering anything.
-
-![AIOC with Wouxun and Direwolf](doc/images/k1-aioc-wouxun.jpg?raw=true "AIOC with Wouxun and Direwolf")
 
 ## What does it do?
 The AIOC is a small adapter with a USB-C connector that enumerates itself as a sound-card (e.g. for APRS purposes), a virtual tty ("COM Port") for programming and asserting the PTT (Push-To-Talk) as well as a CM108 compatible HID endpoint for CM108-style PTT (new in firmware version 1.2.0).
 
-You can watch the videos of the *Temporarily Offline* and *HAM RADIO DUDE* YouTube channels below.
+But! Minus the cable and uses BT instead
 
-[![All In One Cable AIOC - Ham Nuggets Season 4 Episode 8 S04E08](http://img.youtube.com/vi/RZjoPNe634o/0.jpg)](http://www.youtube.com/watch?v=RZjoPNe634o "All In One Cable AIOC - Ham Nuggets Season 4 Episode 8 S04E08")
-[![Your BAOFENG Programming Cable Sucks! - Get This! - AIOC All in One Cable](http://img.youtube.com/vi/xRCmXQYRLE0/0.jpg)](http://www.youtube.com/watch?v=xRCmXQYRLE0 "Your BAOFENG Programming Cable Sucks! - Get This! - AIOC All in One Cable")
+## New features not in AIOC ##
+- Well, obviously BT support
+- ?
 
-There is also a German 4-part article with instructions [here](https://dl-nordwest.com/index.php/2024/07/21/aioc-der-wunderadapter-fuer-handfunkgeraete-teil-1-einfuehrung-und-bestellung/).
-
+**And then you still get all the wonderful ones from AIOC!**
 ## Features ##
 - Cheap & Hackable Digital mode USB interface (similar to digirig, mobilinkd, etc...)
 - Programming Cable Function via virtual Serial Port
@@ -27,23 +19,18 @@ There is also a German 4-part article with instructions [here](https://dl-nordwe
 - Based on easy-to-hack **STM32F302** with internal ADC/DAC (Programmable via USB bootloader using [DFU](#how-to-program))
 - Can support Dual-PTT HTs
 - Supports all popular OSes (Linux, Windows and MacOS with limitations [[*]](https://github.com/skuep/AIOC/issues/13))
-  
+
+
 ## Compatibility
 ### Software
-  - [Direwolf](#notes-on-direwolf) as AX.25 modem/APRS en+decoder/...
-  - [APRSdroid](#notes-on-aprsdroid) as APRS en+decoder
-  - [CHIRP](#notes-on-chirp) for programming
-  - [VaraFM](#notes-on-varafm)
-  - ... and more
+  - TBD
 
 ### Tested Radios (so far)
-  - Wouxun UV-9D Mate (CHIRP + APRS)
-  - Baofeng UV-5R (CHIRP + APRS)
-  - BTECH 6X2 (CHIRP) 
+  - TBD
 
 ![Top side of PCB](doc/images/k1-aioc-photo.jpg?raw=true "Top side of PCB")
 
-## How To Fab
+## How To Fab - NOT YET UPDATED FOR AIOC-one, so your just making an aioc at that point, which is good, just FYI ##
 - Go to JLCPCB.com and upload the GERBER-k1-aioc.zip package (under ``kicad/k1-aioc/jlcpcb``)
   - Select PCB Thickness 1.2mm (that is what I recommend with the TRS connectors I used)
   - You may want to select LeadFree HASL
@@ -125,70 +112,7 @@ After that, it automatically reboots the AIOC into the newly programmed firmware
 __Note__ Should you find yourself with a bricked AIOC, use the initial programming sequence above
 
 ## How To Use
-The serial interface of the AIOC enumerates as a regular COM (Windows) or ttyACM port (Linux) and can be used as such for programming the radio as well as PTT (Asserted on ``DTR=1`` and ``RTS=0``).
-
-__Note__ before firmware version 1.2.0, PTT was asserted by ``DTR=1`` (ignoring RTS) which caused problems with certain radios when using the serial port for programming the radio e.g. using CHIRP.
-
-The soundcard interface of the AIOC gives access to the audio data channels. It has one mono microphone channel and one mono speaker channel and currently supports the following baudrates:
-  - 48000 Hz (preferred)
-  - 32000 Hz
-  - 24000 Hz
-  - 22050 Hz (specifically for APRSdroid, has approx. 90 ppm of frequency error)
-  - 16000 Hz
-  - 12000 Hz
-  - 11025 Hz (has approx. 90 ppm of frequency error)
-  - 8000 Hz
-
-Since firmware version 1.2.0, a CM108 style PTT interface is available for public testing. This interface works in parallel to the COM-port PTT.
-Direwolf on Linux is confirmed working, please report any issues. Note that currently, Direwolf reports some warnings when using the CM108 PTT interface on the AIOC. 
-While they are annoying, they are safe to ignore and require changes in the upstream direwolf sourcecode. See https://github.com/wb2osz/direwolf/issues/448 for more details.
-
-## Notes on Direwolf
-- Follow the regular setup guide with direwolf to determine the correct audio device to use. 
-  For the serial and CM108 PTT interfaces on Linux, you need to set correct permissions on the ttyACM/hidraw devices. Consult Direwolf manual.
-- Configure the device as follows
-  ````
-  [...]
-  ADEVICE plughw:<x>,0  # <- Linux
-  ADEVICE x 0           # <- Windows
-  ARATE 48000
-  [...]
-  PTT CM108             # <- Use the new CM108 compatible style PTT interface
-  PTT <port> DTR -RTS   # <- Alternatively use an old school serial device for PTT
-  [...]
-  ````
-
-## Notes on APRSdroid
-APRSdroid support has been added by AIOC by implementing support for the fixed 22050 Hz sample rate that APRSdroid requires. 
-It is important to notice, that the exact sample rate can not be achieved by the hardware, due to the 8 MHz crystal. 
-The actual sample rate used is 22052 Hz (which represents around 90 ppm of error). From my testing this does not seem to be a problem for APRS at all.
-
-However, since APRSdroid does not have any PTT control, sending data is currently not possible using the AIOC except using the radio VOX function. See https://github.com/ge0rg/aprsdroid/issues/324.
-My previous experience is, that the Android kernel brings support for ttyACM devices (which is perfect for the AIOC) so implementing this feature for APRSdroid should theoretically be no problem.
-
-Ideas such as implementing a digital-modes-spefic VOX-emulation to workaround this problem and let the AIOC activate the PTT automatically are currently being considered. 
-Voice your opinion and ideas in the GitHub issues if this seems interesting to you.
-
-## Notes on CHIRP
-CHIRP is a very popuplar open-source programming software that supports a very wide array of HT radios. You can use CHIRP just as you would like with a regular programming cable.
-
-Download:
-  - Start CHIRP
-  - Select Radio->Download from Radio
-  - Select the AIOC COM/ttyACM port and start
-
-Upload:
-  - Select Radio->Upload to Radio
-  - That's it
-
-## Notes on VaraFM
-Select "DTR only" for PTT Pin, so that the correct RTS/DTR sequence is generated for PTT
 
 # Known issues
-There are known issues with EMI, when using a handheld radio with a monopole (i.e. stock) antenna. In this case, the USB cable will (inadvertently) work as a tiger-tail (counterpoise) and thus, high RF currents go through the USB lines which cause issues with the USB connection. Some people have connected cables between the radio and the AIOC and put a ferrite core on those wires, which seems to reduce those issues. I am trying to find out, which of the wires between the radio and the AIOC produce the problem, so that we might add SMD ferrites on the AIOC in the future
 
 # Future work
-I encourage you to check for Pre-Releases announcing upcoming features. Currently we are working on
-- **Configurable AIOC**: Change the way the PTT is asserted or the USB VID:PID that the AIOC uses using a Python script. These settings can be stored on the AIOC.
-- **Virtual-PTT**: This feature allows your AIOC to be configured to automatically assert the PTT line when it receives TX data from your PC.
-- **Virtual-COS**: The AIOC will notify your PC (e.g. using CM108 emulation) that there is audio data on the microphone input.
